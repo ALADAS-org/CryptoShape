@@ -1,0 +1,29 @@
+{
+  "name": "Cryptoshape",
+  "version": "0.0.27",
+  "description": "Generates a representation of a Bip38 seed phrase as a 3D scene",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ALADAS-org/CryptoShape.git"
+  },
+  "keywords": [
+    "Mnemonic",
+    "Bip39",
+	"Seed phrase",
+    "Shape",
+    "2D",
+    "3D",
+    "Steganography",
+    "NFT",
+    "BabylonJS"
+  ],
+  "author": "Michel Kern and Daniel Rodet",
+  "license": "zlib",
+  "bugs": {
+    "url": "https://github.com/ALADAS-org/CryptoShape/issues"
+  },
+  "homepage": "https://github.com/ALADAS-org/CryptoShape#readme"
+}
