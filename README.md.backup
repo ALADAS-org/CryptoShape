@@ -1,16 +1,14 @@
-## CryptoShape 0.0.28 
-Copyright (c) 2025 - Michel Kern and Daniel Rodet     
+**** CryptoShape 0.0.27 ****    
+Copyright 2025 - Michel Kern and Daniel Rodet     
 License: zlib    
 https://github.com/ALADAS-org/CryptoShape
-
-![](https://github.com/ALADAS-org/Cryptoshape/blob/master/gallery/screenshots/cryptoshape_0_0_28.png)
 
 ** Purpose: Represents a seed phrase as a 3D scene 
    Whitepaper: 3D Visualization of a Cryptowallet's Seed phrase (https://zenodo.org/records/14579720)
 
 ** Usage: Launch by double click on 'index.html'
 
-** Settings (1st Line in GUI):     
+** Settings (1st Line):     
 
 * Actions: 
     - [Generate]: draw a new seed phrase of the specified length
@@ -28,7 +26,7 @@ https://github.com/ALADAS-org/CryptoShape
 		- Coronavirus
 		- Helical virus
 		
-** Settings (2nd Line in GUI):     
+** Settings (2nd Line):     
 	- Length of the seed phrase: 12..24 words    
 	- Seed phrase (randomly drawn with [Generate] or input with the "Pencil" button then [Apply])
 	
