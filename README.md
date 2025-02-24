@@ -1,4 +1,4 @@
-## CryptoShape 0.0.29 
+## CryptoShape 0.0.30 
 Copyright (c) 2025 - Michel Kern and Daniel Rodet     
 License: BSD-3-Clause   
 https://github.com/ALADAS-org/CryptoShape
