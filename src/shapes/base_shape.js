@@ -3,31 +3,6 @@
 // ===================================================================================================
 "use strict";
 
-const PARENT_REP_ARG          = "parent_rep";
-const ORIGIN_ARG              = "origin";
-const SIZE_ARG                = "size";
-const COLOR_ARG               = "color";
-const MATERIAL_ARG            = "material";
-
-const WIREFRAME_ARG           = "wireframe";
-const WIREFRAME_COLOR_ARG     = "wireframe_color";
-const DASHED_ARG              = "dashed";
-const ALPHA_FACES_ARG         = "alpha faces";
-const ALPHA_FACES_MAT_ARG     = "alpha faces material";
-
-const CENTROID_ARG            = "centroid";
-const MIDDLE_ARC_POINT_ARG    = "middle arc point";
-const FACE_COUNT_ARG          = "face count";
-const GOLDBERG_POLYHEDRON_ARG = "goldberd plyhedron";
-const POINTS_ARG              = "points";
-
-const NODE_SHAPE_ARG          = "node_shape";
-const NODE_SHAPE_CUBE         = "cube shape";
-const NODE_SHAPE_SPHERE       = "sphere shape";
-const NODE_SHAPE_ISOCAHEDRON  = "isocahedron shape";
-
-const ARGS_ARG                = "args";
-
 class BaseShape {
     static InstanceCounts = {};
 
@@ -35,10 +10,16 @@ class BaseShape {
 		this.shape_type = this.constructor.name.replace("Shape", "");
 		this.renderer   = renderer;	
 		this.scene      = this.renderer.getScene();
-		this.id         = this.getId();
- 
-		this.data       = ( data != undefined ) ? data : {};
-		this.parent_rep = ( this.data[PARENT_REP_ARG] != undefined ) ? this.data[PARENT_REP_ARG] : undefined;
+
+		data = ( data != undefined ) ? data : {};
+		this.data = data;
+
+		this.mnemonic   = ( data[MNEMONIC_ARG] != undefined )   ? data[MNEMONIC_ARG] : "";
+		this.word_index = ( data[WORD_INDEX_ARG] != undefined ) ? data[WORD_INDEX_ARG] : -1;
+ 		
+		this.parent_rep = ( data[PARENT_REP_ARG] != undefined ) ? data[PARENT_REP_ARG] : undefined;
+
+		this.id = (this.parent_rep != undefined) ? this.parent_rep.getId() : this.getId(); 
 
 		this.origin     = ( data[ORIGIN_ARG]   != undefined ) ? data[ORIGIN_ARG] : new BABYLON.Vector3.Zero();
 		this.size       = ( data[SIZE_ARG]     != undefined ) ? data[SIZE_ARG] : .05;
@@ -55,8 +36,8 @@ class BaseShape {
 
         this.centroid_point = ( data[CENTROID_ARG] != undefined ) ? data[CENTROID_ARG] : new BABYLON.Vector3.Zero();		
 
-		this.points    = ( data[POINTS_ARG]   != undefined ) ? data[POINTS_ARG ]  : [];
-		this.args      = ( data[ARGS_ARG]     != undefined ) ? data[ARGS_ARG]     : {};
+		this.points    = ( data[POINTS_ARG]   != undefined ) ? data[POINTS_ARG ] : [];
+		this.args      = ( data[ARGS_ARG]     != undefined ) ? data[ARGS_ARG]    : {};
 
 		this.shape_mesh = undefined;
 	} // constructor()
@@ -74,8 +55,13 @@ class BaseShape {
     } // _getGltfMetaData()
 	
 	hasMetadata() {		
-		return false;
+		return ( this.mnemonic != "" && this.word_index != -1 );
     } // hasMetadata()
+    
+    setMetadataValue( metadata_field_name, value ) {
+        let metadata = this._getGltfMetaData();
+        metadata["extras"][metadata_field_name] = value; 
+    } // setMetadataValue()
 
 	doEdgeRendering( edges_object, color ) {	
 		let edge_rendering = THEMES[this.renderer.getParameter(THEME_PARAM)][EDGE_RENDERING];
@@ -97,6 +83,14 @@ class BaseShape {
         
 		// https://babylonjsguide.github.io/intermediate/Polyhedra_Shapes#provided-polyhedron-types					  
 		this.shape_mesh = BABYLON.MeshBuilder.CreatePolyhedron( this.id, { type: 1, size: this.size }, this.scene );
+		
+		if ( this.renderer.getParameter(METADATA_PARAM) ) {
+			let glf_metadata = this._getGltfMetaData();
+			glf_metadata["extras"] = { [MNEMONIC_ARG]:   this.mnemonic, 
+								       [WORD_INDEX_ARG]: this.word_index
+						             };
+	    }
+
 		this.shape_mesh.enableEdgesRendering();
 		this.shape_mesh.edgesWidth = 0.4;
 		this.shape_mesh.edgesColor = new BABYLON.Color4(0, 0, 0, 1);
@@ -110,7 +104,7 @@ class BaseShape {
     } // draw()
 
 	static ResetObjectCount() {
-		console.log(">> --- BaseShape.ResetObjectCount " +  this.name );
+		// console.log(">> --- BaseShape.ResetObjectCount " +  this.name );
 		let keys = Object.keys(BaseShape.InstanceCounts);
 		for ( let i=0; i< keys.length; i++ ){
 			BaseShape.InstanceCounts[keys[i]] = 0;
@@ -126,9 +120,8 @@ class BaseShape {
 
 		BaseShape.InstanceCounts[this.shape_type]++;
 
-		const pad_with_zero = (n) => (n < 10 ? ('0'+n).toString() : n.toString());
-
-		this.id = this.shape_type.toLowerCase() + "_" + pad_with_zero( BaseShape.InstanceCounts[this.shape_type] );
+		this.id =   this.shape_type.toLowerCase() 
+		          + "_" + ShapeUtils.PadWithZero( BaseShape.InstanceCounts[this.shape_type] );
 		return this.id;
 	} // getId();
 } // BaseShape class

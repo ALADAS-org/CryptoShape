@@ -36,12 +36,14 @@ class LinkRep extends BaseRep {
         let white_color = Color.AsVec3(WHITE);
 
         // NB: inconsistency with [COLOR_ARG] : for LinkRep it is the ColorAsVec3(WHITE)
-        //                                      for NodeRep it is the color name (eg: WHITE)                                   
-        let data = { [COLOR_ARG]: Color.AsVec3(this.color), [MIDDLE_ARC_POINT_ARG]: middle_arc_point, [POINTS_ARG]: points };	
+        //                                      for NodeRep it is the color name (eg: WHITE) 
+        this.id =   "Link_" 
+                 + ShapeUtils.PadWithZero(this.start_node.getNodeNumber() + 1) + "->"
+                 + ShapeUtils.PadWithZero(this.end_node.getNodeNumber() + 1);                               
+        let data = { [ID_ARG]: this.id, [COLOR_ARG]: Color.AsVec3(this.color), 
+                     [MIDDLE_ARC_POINT_ARG]: middle_arc_point, [POINTS_ARG]: points };	
         this.link_shape = new ArcShape( this.renderer, data );
         this.link_shape.draw();
-
-        this.id = "LinkRep/" + this.link_shape.getId();
         // console.log(">> LinkRep.draw " + this.id);
     } // draw()
 } // LinkRep class

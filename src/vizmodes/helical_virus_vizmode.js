@@ -68,8 +68,9 @@ class HelicalVirusVizMode extends CoronaVirusVizMode {
         let radius = 0.2;
         let ring_point = GeometryUtils.ComputePolarPoint2D( radius, node_rep.getTheta(), ring_center);
 
-        this.stick_points = { points: [ node_rep.getPosition(), ring_point ] };              
-        let stick = BABYLON.MeshBuilder.CreateLines(this.id + "_stick", this.stick_points, this.scene);
+        this.stick_points = { points: [ node_rep.getPosition(), ring_point ] }; 
+        let vizject_id = "stick_" + ShapeUtils.PadWithZero(node_rep.getNodeNumber() + 1);              
+        let stick = BABYLON.MeshBuilder.CreateLines( vizject_id, this.stick_points, this.scene );
         stick.color = stick_color_rgb
         node_rep.do_edge_rendering( stick, stick_color_rgb, 2 );
         this.renderer.addObject(stick);
@@ -79,8 +80,9 @@ class HelicalVirusVizMode extends CoronaVirusVizMode {
         let Y_STEP = STEPS_COUNT * HELIX_PITCH / 7;
         let p0 = new BABYLON.Vector3( ring_point.x, ring_point.y - Y_STEP/2 , ring_point.z ); 
         let p1 = new BABYLON.Vector3( ring_point.x, ring_point.y + Y_STEP/2 , ring_point.z );
-        let anchor_points = { points: [ p0, p1 ] };              
-        let stick_anchor = BABYLON.MeshBuilder.CreateLines( this.id + "_stick_anchor", anchor_points, this.scene);
+        let anchor_points = { points: [ p0, p1 ] };
+        vizject_id = "stick_anchor_" + ShapeUtils.PadWithZero(node_rep.getNodeNumber() + 1);             
+        let stick_anchor = BABYLON.MeshBuilder.CreateLines( vizject_id, anchor_points, this.scene);
         stick_anchor.color = stick_color_rgb
         node_rep.do_edge_rendering( stick_anchor, stick_color_rgb, 2 );
         this.renderer.addObject(stick_anchor);
@@ -90,7 +92,7 @@ class HelicalVirusVizMode extends CoronaVirusVizMode {
     } // drawStick()
 
     decorateStick( node_rep ) {
-        console.log(">> HelicalVirusVizMode.decorateStick ");
+        // console.log(">> HelicalVirusVizMode.decorateStick ");
 
         let word_point_x_bit_array = this.getWordIndex_X_AsBitArray( node_rep );
         
@@ -99,11 +101,11 @@ class HelicalVirusVizMode extends CoronaVirusVizMode {
 
         let start_percent = 30;
         let step_percent  = 10;
-        let decorate_radius        = 0.02; // 0.03
+        let decorate_radius = 0.02; // 0.03
         
         const RING_TORUS_RADIUS = .015; 
 
-        const draw_ring = ( center, color ) => {
+        const draw_ring = ( center, ring_index, color ) => {
             let p1_a = new BABYLON.Vector3( center.x, center.y - decorate_radius, center.z);    
             let p1_b = new BABYLON.Vector3( center.x, center.y + decorate_radius, center.z);    
             let p1_ortho = GeometryUtils.ComputePolarPoint2D( decorate_radius, node_rep.getTheta() + Math.PI/2, center );
@@ -113,7 +115,9 @@ class HelicalVirusVizMode extends CoronaVirusVizMode {
             this.renderer.addObject( ring_circle );
 
             let options = { diameter: decorate_radius*1.6, thickness: RING_TORUS_RADIUS, tessellation: 32 };
-            let ring_torus = BABYLON.MeshBuilder.CreateTorus("torus_" + node_rep.getId(), options, this.scene );
+            let vizject_id =   "ring_" + ShapeUtils.PadWithZero(node_rep.getNodeNumber() + 1) 
+                             + "_" + ring_index;
+            let ring_torus = BABYLON.MeshBuilder.CreateTorus( vizject_id, options, this.scene );
             ring_torus.material = MATERIALS[color];
             ring_torus.position = center;
             GeometryUtils.RotateAroundPivot( ring_torus, center, BABYLON.Axis.X, ring_circle.rotation.x + Math.PI/2 );
@@ -128,15 +132,15 @@ class HelicalVirusVizMode extends CoronaVirusVizMode {
         // NB: 'rings bits' are ordered from center to periphery: [0],[1],[2]
         let p0 = GeometryUtils.GetMiddlePoint( stick_start, stick_end, start_percent + 2 * step_percent);
         ring_color = ( word_point_x_bit_array[0] == 1 ) ? MAGENTA : GREY_50; // GREY_50;
-        draw_ring( p0, ring_color );
+        draw_ring( p0, 0, ring_color );
 
         let p1 = GeometryUtils.GetMiddlePoint( stick_start, stick_end, start_percent + step_percent );
         ring_color = ( word_point_x_bit_array[1] == 1 ) ? MAGENTA : GREY_50; // GREY_50; 
-        draw_ring( p1, ring_color );        
+        draw_ring( p1, 1, ring_color );        
 
         let p2 = GeometryUtils.GetMiddlePoint( stick_start, stick_end, start_percent );        
         ring_color = ( word_point_x_bit_array[2] == 1 ) ? MAGENTA : GREY_50; // GREY_50; 
-        draw_ring( p2, ring_color );        
+        draw_ring( p2, 2, ring_color );        
     } // decorateStick()
 
     drawBoundings() {

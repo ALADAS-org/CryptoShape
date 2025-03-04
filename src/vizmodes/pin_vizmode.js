@@ -31,7 +31,9 @@ class PinVizMode extends BaseVizMode {
         for (let i=0; i < this.word_indexes.length; i++) {
             // NB: inconsistency with [COLOR_ARG] : for NodeRep it is the color name (eg: MAGENTA)
             //                                      for LinkRep it is the ColorAsVec3(MAGENTA)
-            let data = { [MATERIAL_ARG]: MATERIALS[YELLOW], [NODE_SHAPE_ARG]: NODE_SHAPE_SPHERE, [SIZE_ARG]: 0.2 };
+            
+            let data = { [ID_ARG]: "Mnemonic_" + ShapeUtils.PadWithZero(i+1), 
+                         [MATERIAL_ARG]: MATERIALS[YELLOW], [NODE_SHAPE_ARG]: NODE_SHAPE_SPHERE, [SIZE_ARG]: 0.2 };
             let node_rep = new NodeRep( this, this.word_indexes, i, data );
             this.node_reps.push( node_rep );
         }

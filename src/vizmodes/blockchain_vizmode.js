@@ -32,7 +32,8 @@ class BlockchainVizMode extends BaseVizMode {
             // NB: inconsistency with [COLOR_ARG] : for NodeRep it is the color name (eg: MAGENTA)
             //                                      for LinkRep it is the ColorAsVec3(MAGENTA)
             // let data = { [MATERIAL_ARG]: MATERIALS[YELLOW], [NODE_SHAPE_ARG]: NODE_SHAPE_CUBE, [SIZE_ARG]: 0.1 };
-            let data = { [COLOR_ARG]: MAGENTA, [NODE_SHAPE_ARG]: NODE_SHAPE_CUBE, [SIZE_ARG]: 0.04 };
+            let data = { [ID_ARG]: "Mnemonic_" + ShapeUtils.PadWithZero(i+1), 
+                         [COLOR_ARG]: MAGENTA, [NODE_SHAPE_ARG]: NODE_SHAPE_CUBE, [SIZE_ARG]: 0.04 };
             let node_rep = new NodeRep( this, this.word_indexes, i, data );
             this.node_reps.push( node_rep );
         }
@@ -61,7 +62,8 @@ class BlockchainVizMode extends BaseVizMode {
             let node_rep = this.node_reps[i];
             node_rep.draw();
 
-            let data = { [MATERIAL_ARG]: MATERIALS|[ALPHA_MAT_2], [ALPHA_FACES_MAT_ARG]: MATERIALS[ALPHA_MAT_2],
+            let data = { [PARENT_REP_ARG]: node_rep,
+                         [MATERIAL_ARG]: MATERIALS|[ALPHA_MAT_2], [ALPHA_FACES_MAT_ARG]: MATERIALS[ALPHA_MAT_2],
                          [WIREFRAME_ARG]: true, [WIREFRAME_COLOR_ARG]: CYAN, [DASHED_ARG]: true,
                          [ORIGIN_ARG]: node_rep.getPosition(), [SIZE_ARG]: STEP };
             let box_shape = new CubeShape( this.renderer, data );
@@ -105,9 +107,11 @@ class BlockchainVizMode extends BaseVizMode {
 
                 link_points.push(end_point);
 
-                let id = "BC_" + start_node_rep.getShape().getId() + "->" +  start_node_rep.getShape().getId();
+                let vizject_id =   "Link_" 
+                        + ShapeUtils.PadWithZero(start_node_rep.getNodeNumber() +1 ) + "->" 
+                        + ShapeUtils.PadWithZero(end_node_rep.getNodeNumber() + 1);
 
-                let blockchain_link_vizject = BABYLON.MeshBuilder.CreateLines( id, { points: link_points });
+                let blockchain_link_vizject = BABYLON.MeshBuilder.CreateLines( vizject_id, { points: link_points });
                 blockchain_link_vizject.color = Color.AsVec3(MAGENTA);
                 this.renderer.addObject(blockchain_link_vizject);
             }   

@@ -19,11 +19,12 @@ class BaseRep {
         
         this.coordinates_system = this.vizmode.getCoordinatesSystem();        
 
-        this.word_indexes = word_indexes;
+        this.word_indexes = word_indexes;   
+        
+        data = ( data != undefined ) ? data : {}; 
+        this.data = data; 
 
-        this.id = "";
-
-        this.data = ( data != undefined ) ? data : {}; 
+        this.id = ( data[ID_ARG] != undefined ) ? data[ID_ARG] : "";
 
         this.shape_mesh = undefined;
 
@@ -78,10 +79,15 @@ class BaseRep {
         return [ this.centroid_point ];
     } // getPoints()
 
+    getVizMode() {
+        return this.vizmode;
+    } // getVizMode()
+
     draw() {
         console.log(">> BaseRep.draw");      
 
-        let data = { [MATERIAL_ARG] : MATERIALS[this.color], [ORIGIN_ARG]: this.centroid_point, 
+        let data = { [ID_ARG] : this.id,
+                     [MATERIAL_ARG] : MATERIALS[this.color], [ORIGIN_ARG]: this.centroid_point, 
                      [SIZE_ARG]: this.centroid_size };
             
         this.shape = new BaseShape( this.renderer, data );

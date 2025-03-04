@@ -44,7 +44,8 @@ class CoronaVirusVizMode extends BaseVizMode {
         for (let i=0; i < this.word_indexes.length; i++) {
             // NB: inconsistency with [COLOR_ARG] : for NodeRep it is the color name (eg: MAGENTA)
             //                                      for LinkRep it is the ColorAsVec3(MAGENTA)
-            let data = { [COLOR_ARG]: MAGENTA };
+            let data = { [ID_ARG]: "Mnemonic_" + ShapeUtils.PadWithZero(i+1),
+                         [COLOR_ARG]: MAGENTA };
             let node_rep = new NodeRep( this, this.word_indexes, i, data );
             this.node_reps.push( node_rep );
         }
@@ -65,7 +66,7 @@ class CoronaVirusVizMode extends BaseVizMode {
                 ShapeUtils.DrawWireFrameSphere( ORIGIN, 0.5 );
             }
             else {
-                let data = { [COLOR_ARG]: ORANGE, [FACE_COUNT_ARG]: 32, [SIZE_ARG]: 0.72 };
+                let data = { [ID_ARG]: "Core", [COLOR_ARG]: ORANGE, [FACE_COUNT_ARG]: 32, [SIZE_ARG]: 0.72 };
                 let core_shape = new PolyhedronShape( this.renderer, data );
                 core_shape.draw();
             }
@@ -82,8 +83,9 @@ class CoronaVirusVizMode extends BaseVizMode {
         let stick_color_rgb = Color.AsVec3( this.stick_color);
         // console.log(">> CoronaVirusVizMode.drawStick stick_color_rgb: " + stick_color_rgb);        
 
-        this.stick_points = { points: [ node_rep.getPosition(), ORIGIN ] };              
-        let stick = BABYLON.MeshBuilder.CreateLines( node_rep.id + "_stick", this.stick_points, this.scene );
+        this.stick_points = { points: [ node_rep.getPosition(), ORIGIN ] };  
+        let vizject_id = "stick_" + ShapeUtils.PadWithZero(node_rep.getNodeNumber()+1);            
+        let stick = BABYLON.MeshBuilder.CreateLines( vizject_id, this.stick_points, this.scene );
         stick.color = stick_color_rgb;
         node_rep.do_edge_rendering( stick, stick_color_rgb, 2 );
 
@@ -107,9 +109,11 @@ class CoronaVirusVizMode extends BaseVizMode {
         
         const RING_TORUS_RADIUS = .015; 
 
-        const draw_ring = ( node_rep, center, color ) => {
+        const draw_ring = ( node_rep, ring_index, center, color ) => {
             let options = { diameter: decorate_radius*1.6, thickness: RING_TORUS_RADIUS, tessellation: 32 };
-            let ring_torus = BABYLON.MeshBuilder.CreateTorus("ring_" + node_rep.getId(), options, this.scene );
+            let vizject_id =   "ring_" 
+                             + ShapeUtils.PadWithZero(node_rep.getNodeNumber()+1) + "_" + ring_index;
+            let ring_torus = BABYLON.MeshBuilder.CreateTorus(vizject_id, options, this.scene );
             ring_torus.material = MATERIALS[color];     
             ring_torus.position = center;
             this.renderer.addObject( ring_torus );
@@ -127,15 +131,15 @@ class CoronaVirusVizMode extends BaseVizMode {
 
         let p0 = GeometryUtils.GetMiddlePoint( stick_start, ORIGIN, start_percent + 2 * step_percent ); 
         ring_color = ( word_point_x_bit_array[0] == 1 ) ? MAGENTA : GREY_50; // GREY_50;                           
-        let ring_torus_0 = draw_ring( node_rep, p0, ring_color); 
+        let ring_torus_0 = draw_ring( node_rep, 0, p0, ring_color); 
 
         let p1 = GeometryUtils.GetMiddlePoint( stick_start, ORIGIN, start_percent + step_percent );
         ring_color = ( word_point_x_bit_array[1] == 1 ) ? MAGENTA : GREY_50; // GREY_50; 
-        let ring_torus_1 = draw_ring( node_rep, p1, ring_color);
+        let ring_torus_1 = draw_ring( node_rep, 1, p1, ring_color);
 
         let p2 = GeometryUtils.GetMiddlePoint( stick_start, ORIGIN, start_percent );
         ring_color = ( word_point_x_bit_array[2] == 1 ) ? MAGENTA : GREY_50; // GREY_50; 
-        let ring_torus_2 = draw_ring( node_rep, p2, ring_color);
+        let ring_torus_2 = draw_ring( node_rep, 2, p2, ring_color);
     } // decorateStick()
 
     drawBoundings() {

@@ -567,7 +567,14 @@ const onApplyMnemonicsChange = () => {
 
         let mnemonics = document.getElementById( "mnemonics_input_id" ).value
 		                .trim().replaceAll("  "," ");
-        console.log("   mnemonics: '" + mnemonics + "'");     		
+        console.log("   mnemonics: '" + mnemonics + "'");
+			
+		let mnemonics_count = mnemonics.split(' ').length;
+		console.log("   mnemonics length: '" + mnemonics_count + "'");
+
+		document.getElementById(WORD_COUNT_ID).value = mnemonics_count;
+		renderer.setParameter(WORD_COUNT_PARAM, mnemonics_count);
+
 		let word_indexes = MnemonicUtils.MnemonicsToWordIndexes( mnemonics);
 
 		MainWordIndexes = word_indexes;

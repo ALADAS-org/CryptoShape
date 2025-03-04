@@ -14,13 +14,17 @@ const BOX_POINTS_MATRIX = [ [ 0, 0, 0], [ 1, 0, 0], [ 1, 1, 0], [ 0, 1, 0], [ 0,
 const AXIS_LENGTH = 0.85;
 
 let LinkCount        = 0; 
-let SimpleShapeCount = 0;                          
+let SimpleShapeCount = 0;  
 
 class ShapeUtils {
     static Reset() {
         LinkCount        = 0;
         SimpleShapeCount = 0; 
     } // ShapeUtils.Reset()
+
+    static PadWithZero(n) {
+        return (n < 10 ? ('0'+n).toString() : n.toString());
+    } // ShapeUtils.PadWithZero()
 
     static CreatePolyline( arg_points, args ) {
 		// console.log(">> createPolyline");
@@ -336,6 +340,10 @@ class ShapeUtils {
 
         let exportable = THEMES[renderer.getParameter(THEME_PARAM)][EXPORTABLE];
         if ( exportable == undefined ) exportable = false;
+
+        // NB: Disable semi-opaque ùaterial for the bounding box 
+        exportable = true;
+
         if ( alpha_faces ) exportable = true;
 
         if ( exportable ) {

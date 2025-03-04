@@ -7,7 +7,7 @@ class PolyhedronShape extends BaseShape {
 	constructor( renderer, data ) {	
         super( renderer, data );
         this.face_count = (this.data[FACE_COUNT_ARG] != undefined) ? this.data[FACE_COUNT_ARG ] : 6;
-        this.goldberg_polyhedron_options = (this.data[GOLDBERG_POLYHEDRON_ARG] != undefined) ? this.data[GOLDBERG_POLYHEDRON_ARG ] : {};                
+        this.goldberg_polyhedron_options = (this.data[GOLDBERG_POLYHEDRON_ARG] != undefined) ? this.data[GOLDBERG_POLYHEDRON_ARG ] : {};           
 	} // constructor()   
 
     // https://doc.babylonjs.com/features/featuresDeepDive/mesh/creation/set/sphere

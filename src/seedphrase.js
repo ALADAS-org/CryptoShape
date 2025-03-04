@@ -65,11 +65,10 @@ class SeedPhrase {
 		
 		// *** draw 'Centroid'
 		if ( this.renderer.getParameter(SHOW_CENTROID_PARAM) ) {
-			let centroid_dot_size = 0.12;
-	
+			let centroid_dot_size = 0.12;	
 			let ball_color = THEMES[this.renderer.getParameter(THEME_PARAM)][NODE_COLOR][0];
 	
-			let data = { [MATERIAL_ARG] : MATERIALS[ball_color], [ORIGIN_ARG]: centroid_point, 
+			let data = { [MATERIAL_ARG]: MATERIALS[ball_color], [ORIGIN_ARG]: centroid_point, 
 						 [SIZE_ARG]: centroid_dot_size, [ARGS_ARG]: { "shape": [SPHERE_DOT] } };
 			let centroid_shape = new BallShape( this.renderer, data ); 
 			centroid_shape.draw();
@@ -110,8 +109,8 @@ class SeedPhrase {
 				dot_size = 0.005; // 0.07 = size for visible Balls 
 			}
 	
-			let data = { [MATERIAL_ARG]: MATERIALS[ball_color], [ORIGIN_ARG]: current_point, 
-						 [SIZE_ARG]: dot_size };
+			let data = { [MATERIAL_ARG]: MATERIALS[ball_color], 
+				         [ORIGIN_ARG]: current_point, [SIZE_ARG]: dot_size };
 						 
 			if ( this.renderer.getParameter(METADATA_PARAM) )  {
 				data[MNEMONIC_ARG]   = mnemonic; 
@@ -144,20 +143,24 @@ class SeedPhrase {
 					// console.log("LINK_COLOR:   " + THEMES[theme_name][LINK_COLOR][0] );
 					let arc_color = Color.AsVec3( THEMES[theme_name][LINK_COLOR][0] );
 	
-					console.log("filled_triangles:   " + filled_triangles);
+					// console.log("filled_triangles:   " + filled_triangles);
+
+					let vizject_id =   "Link_" 
+					                 + ShapeUtils.PadWithZero(i) + "->" 
+									 + ShapeUtils.PadWithZero(i+1); 
+
+					let data = { [ID_ARG]: vizject_id,
+						         [COLOR_ARG]: arc_color, [ORIGIN_ARG]: current_point, 
+						         [CENTROID_ARG]: centroid_point, [POINTS_ARG]: points };
+
 					if (filled_triangles) {
 						points.push(centroid_point);
-                        arc_color = Color.AsVec3(RED);						
-						let data = { [COLOR_ARG]: arc_color, [ORIGIN_ARG]: current_point, 
-									 [CENTROID_ARG]: centroid_point, [POINTS_ARG]: points };
-
+                        arc_color = Color.AsVec3(RED);				
 						let arc_shape = new ArcShape( this.renderer, data ); 
 						arc_shape.material = MATERIALS[BLACK];
 						arc_shape.draw();
 					}
-					else {
-						let data = { [COLOR_ARG]: arc_color, [ORIGIN_ARG]: current_point, 
-									 [CENTROID_ARG]: centroid_point, [POINTS_ARG]: points };	
+					else {	
 						let arc_shape = new ArcShape( this.renderer, data ); 
 						arc_shape.draw();
 					}

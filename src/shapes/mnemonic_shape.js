@@ -9,21 +9,9 @@ const PREVIOUS_NODE_ARG = "previous_node";
 
 class MnemonicShape extends BallShape {
 	constructor( renderer, data ) {	
-        super( renderer, data );
-		
-        this.mnemonic   = ( data[MNEMONIC_ARG]   != undefined ) ? data[MNEMONIC_ARG]   : "";
-        this.word_index = ( data[WORD_INDEX_ARG] != undefined ) ? data[WORD_INDEX_ARG] : -1;		
-		this.material   = ( data[MATERIAL_ARG]   != undefined ) ? data[MATERIAL_ARG]   : MATERIALS[WHITE];
+        super( renderer, data );      
+       	this.material = ( data[MATERIAL_ARG] != undefined ) ? data[MATERIAL_ARG] : MATERIALS[WHITE];
 	} // constructor()  
-	
-	hasMetadata() {		
-		return ( this.mnemonic != "" && this.word_index != -1 );
-    } // hasMetadata()
-    
-    setMetadataValue( metadata_field_name, value ) {
-        let metadata = this.getGltfMetaData();
-        metadata["extras"][metadata_field_name] = value; 
-    } // setMetadataValue()
 
     // https://doc.babylonjs.com/features/featuresDeepDive/mesh/creation/set/sphere
     // https://doc.babylonjs.com/features/featuresDeepDive/mesh/transforms/center_origin/position}
@@ -31,11 +19,11 @@ class MnemonicShape extends BallShape {
         this.shape_mesh = BABYLON.MeshBuilder.CreateSphere
                           ( this.id, { "segments": 4, "diameter": this.size }, this.scene );         
 
-        if ( this.hasMetadata() ) {
-			let metadata = this._getGltfMetaData();
-			metadata["extras"] =  { [MNEMONIC_ARG]:   this.mnemonic, 
-                                    [WORD_INDEX_ARG]: this.word_index
-                                  };
+        if ( this.renderer.getParameter(METADATA_PARAM) ) {
+			    let metadata = this._getGltfMetaData();
+			    metadata["extras"] = { [MNEMONIC_ARG]:   this.mnemonic, 
+                                 [WORD_INDEX_ARG]: this.word_index
+                               };
         }
 		
         this.shape_mesh.material = this.material;        
@@ -45,4 +33,18 @@ class MnemonicShape extends BallShape {
         
         return this.shape_mesh;
     } // draw()
+
+    getId() {
+		if ( this.id != undefined ) return this.id;
+
+		if ( BaseShape.InstanceCounts[this.shape_type] == undefined ) {
+			BaseShape.InstanceCounts[this.shape_type] = 0;
+		}
+
+		BaseShape.InstanceCounts[this.shape_type]++;
+
+		this.id =   "Mnemonic" 
+		          + "_" + ShapeUtils.PadWithZero( BaseShape.InstanceCounts[this.shape_type] );
+		return this.id;
+	} // getId();
 } // MnemonicShape class

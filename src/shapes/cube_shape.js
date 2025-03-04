@@ -17,7 +17,7 @@ class CubeShape extends BaseShape {
 	} // constructor()   
 
     draw() {    
-        const draw_dashed_wire_square = ( position, size ) => {
+        const draw_dashed_wire_square = ( id, position, size ) => {
             let positions = []; 
     
             // 6 planes ( 6 faces of a cube)	
@@ -39,22 +39,37 @@ class CubeShape extends BaseShape {
             // https://playground.babylonjs.com/#TYF5GH#1
             // https://babylonjsguide.github.io/intermediate/Parametric_Shapes#dashed-lines
             let data = { points: positions, gapSize: 5 };
-            let square_mesh = BABYLON.MeshBuilder.CreateDashedLines( this.id, data );
+
+            // const padWithZero = (n) => (n < 10 ? ('0'+n).toString() : n.toString());
+            let mesh_name = id;
+            // if (this.parent_rep != undefined) mesh_name += "_" + padWithZero(this.parent_rep.getNodeNumber());            
+
+            let square_mesh = BABYLON.MeshBuilder.CreateDashedLines( mesh_name, data );
             square_mesh.color = square_color;
             this.renderer.addObject( square_mesh );               
         }; // draw_dashed_wire_square()
 
+        // console.log("> CubeShape new shape_mesh: " + this.id);
+        let vizject_id = this.id;
+        if ( this.parent_rep != undefined ) {
+            vizject_id =   "Node_alpha_box_" 
+                         + ShapeUtils.PadWithZero(this.parent_rep.getNodeNumber() + 1);
+        }
         this.shape_mesh = BABYLON.MeshBuilder.CreateBox
-                          ( this.id, { "size": this.size }, this.scene ); 
+                          ( vizject_id, { "size": this.size }, this.scene ); 
 
         this.shape_mesh.material = this.material;        
         this.shape_mesh.position = this.origin;
 
         if ( this.wireframe ) {
             let edge_thickness = 1.0;
-
             if ( this.dashed ) {
-                draw_dashed_wire_square(this.origin, this.size);
+                let vizject_id = "Node_wirebox_" + this.id;                
+                if (this.parent_rep != undefined) {
+                    vizject_id =   "Node_wirebox_" 
+                                 + ShapeUtils.PadWithZero(this.parent_rep.getNodeNumber() + 1);
+                }
+                draw_dashed_wire_square( vizject_id, this.origin, this.size);
                 // this.shape_mesh.setEnabled(false);
                 edge_thickness = 0;
             }    

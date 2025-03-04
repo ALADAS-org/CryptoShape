@@ -36,6 +36,10 @@ class NodeRep extends BaseRep {
         return this.word_index;
     } // getWordIndex()
 
+    getNodeNumber() {
+        return this.node_number;
+    } // getNodeNumber()
+
     getPosition() {
         return this.position;
     } // getPosition()
@@ -120,7 +124,6 @@ class NodeRep extends BaseRep {
 
     draw() {   
         // let data = { [COLOR_ARG]: this.color, [FACE_COUNT_ARG]: 8, [ORIGIN_ARG]: this.position };
-        let data = {};
 
         if ( this.coordinates_system == SPHERICAL_COORDINATES ) {
              // NB: "required" Side effect
@@ -130,48 +133,65 @@ class NodeRep extends BaseRep {
             this.position = this.computePosition(GeometryUtils.GetRadius() * CYLINDRICAL_RADIUS_SCALE);
         }
 
+        let data = { [ORIGIN_ARG]: this.position  };
+        if ( this.renderer.getParameter(METADATA_PARAM) )  {
+            data[MNEMONIC_ARG]   = MnemonicUtils.WordIndexToMnemonic( this.getWordIndex() ); 
+            data[WORD_INDEX_ARG] = this.getWordIndex();
+        }
+
         // "node shape consts" in 'base_shape.js'
         if (this.node_shape == NODE_SHAPE_CUBE) {
-            data = { [COLOR_ARG]: this.color, [FACE_COUNT_ARG]: 6, [ORIGIN_ARG]: this.position, [SIZE_ARG]: this.size };                
+            data[COLOR_ARG]      = this.color;
+            data[FACE_COUNT_ARG] = 6;
+            data[SIZE_ARG]       = this.size;
+            if ( this.vizmode.getName() == BLOCKCHAIN_VIZMODE ) {
+                data[[PARENT_REP_ARG]] = this;            
+            }
             this.shape = new PolyhedronShape( this.renderer, data );
         }
         else if (this.node_shape == NODE_SHAPE_SPHERE) {
-            data = { [MATERIAL_ARG]: MATERIALS[GREY_50], [SIZE_ARG]: 0.07, [ORIGIN_ARG]: this.position };                
+            data[PARENT_REP_ARG] = this;
+            data[MATERIAL_ARG]   = MATERIALS[GREY_50];
+            data[SIZE_ARG]       = 0.07;                
             this.shape = new BallShape( this.renderer, data );
         }
         else { // NODE_SHAPE_ISOCAHEDRON
             // let data = { [COLOR_ARG]: this.color, [FACE_COUNT_ARG]: 6, [ORIGIN_ARG]: this.position };
-            data = { [COLOR_ARG]: this.color, [FACE_COUNT_ARG]: 8, [ORIGIN_ARG]: this.position };
-                
+            data[PARENT_REP_ARG] = this;
+            data[COLOR_ARG]      = this.color;
+            data[FACE_COUNT_ARG] = 8;             
             //this.shape = new BaseShape( this.renderer, data );
             this.shape = new PolyhedronShape( this.renderer, data );
         }
 
-        this.shape_mesh = this.shape.draw();
+        // NB: Specific case: dont't draw NodeRep for BLOCKCHAIN_VIZMODE vizmode
+        if ( this.shape != undefined ) {
+            this.shape_mesh = this.shape.draw();
 
-        this.id = "NodeRep/" + this.shape.getId();
-        // console.log(">> NodeRep.draw " + this.id);   
-        
-        // let shadow_shape_position = this.computePosition( GeometryUtils.GetRadius() * 0.85);
-        // let shadow_shape_position = this.computePosition(); // NB: "required" Side effect
+            if ( this.renderer.getParameter(METADATA_PARAM) ) {
+                let gltf_metadata = this.shape._getGltfMetaData();
+                let word_index = this.getWordIndex();
+                gltf_metadata["extras"] = 
+                    { [MNEMONIC_ARG]:   MnemonicUtils.WordIndexToMnemonic(word_index), 
+                      [WORD_INDEX_ARG]: word_index };                       
+            }
 
-        // let shadow_shape_data = { [COLOR_ARG]: Color.AsVec3(CYAN), [FACE_COUNT_ARG]: 6, [ORIGIN_ARG]: shadow_shape_position };
-        // let shadow_shape = new PolyhedronShape( this.renderer, shadow_shape_data );
-        // let shadow_shape_mesh = shadow_shape.draw();
-        
-        // console.log("this.vizmode: " + this.vimode);
+            // this.id = "NodeRep/" + this.shape.getId();
+            // console.log(">> NodeRep.draw " + this.id);          
+            // console.log("this.vizmode: " + this.vimode);
 
-        if ( this.coordinates_system == SPHERICAL_COORDINATES ) {
-            GeometryUtils.RotateAroundPivot( this.shape_mesh, this.shape_mesh.position, BABYLON.Axis.Y, this.theta );
-            GeometryUtils.RotateAroundPivot( this.shape_mesh, this.shape_mesh.position, BABYLON.Axis.Z, this.phi );
-        }   
-        else if ( this.coordinates_system == CYLINDRICAL_COORDINATES ) {
-           // GeometryUtils.RotateAroundPivot( this.shape_mesh, this.shape_mesh.position, BABYLON.Axis.Z, this.theta );
-           // GeometryUtils.RotateAroundPivot( this.shape_mesh, this.shape_mesh.position, BABYLON.Axis.Y, Math.PI/4 );
-        }       
+            if ( this.coordinates_system == SPHERICAL_COORDINATES ) {
+                GeometryUtils.RotateAroundPivot( this.shape_mesh, this.shape_mesh.position, BABYLON.Axis.Y, this.theta );
+                GeometryUtils.RotateAroundPivot( this.shape_mesh, this.shape_mesh.position, BABYLON.Axis.Z, this.phi );
+            }   
+            else if ( this.coordinates_system == CYLINDRICAL_COORDINATES ) {
+            // GeometryUtils.RotateAroundPivot( this.shape_mesh, this.shape_mesh.position, BABYLON.Axis.Z, this.theta );
+            // GeometryUtils.RotateAroundPivot( this.shape_mesh, this.shape_mesh.position, BABYLON.Axis.Y, Math.PI/4 );
+            }       
 
-        this.vizmode.drawStick( this ); // must be after GeometryUtils.RotateAroundPivot which sets rotationQuaternion
+            this.vizmode.drawStick( this ); // must be after GeometryUtils.RotateAroundPivot which sets rotationQuaternion
 
-        this.id = "NodeRep/" + this.shape.getId();
+            // this.id = "NodeRep/" + this.shape.getId();
+        }
     } // draw()
 } // NodeRep class

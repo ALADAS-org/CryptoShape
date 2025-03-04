@@ -28,7 +28,7 @@ class MnemonicUtils {
 	
 	static MnemonicToWordIndex( mnemonic ) {
         // console.log("> **** MnemonicUtils.MnemonicToWordIndex " + mnemonic );
-		console.log("   mnk2widx> mnemonic: '" + mnemonic + "'" );
+		// console.log("   mnk2widx> mnemonic: '" + mnemonic + "'" );
         let word_index = -1;
 		for ( let i=0; i < WORDLIST_EN.length; i++ ) {
 			let word = WORDLIST_EN[i];			
@@ -47,7 +47,7 @@ class MnemonicUtils {
 		let word_indexes = [];	
 		for ( let i=0; i < words.length; i++ ) {
 			let mnemonic = words[i]; 
-			console.log("   mnks2widxs> mnemonic[" + i + "]: " + mnemonic + "'" );
+			// console.log("   mnks2widxs> mnemonic[" + i + "]: " + mnemonic + "'" );
 			let word_index = MnemonicUtils.MnemonicToWordIndex( mnemonic );
 			if ( word_index == -1 ) {
 				break;

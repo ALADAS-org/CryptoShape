@@ -6,8 +6,9 @@
 class ArcShape extends BaseShape {
 	constructor( renderer, data ) {	
         super( renderer, data );
+        this.id = ( data[ID_ARG] != undefined ) ? data[ID_ARG] : this.getId();
         this.middle_arc_point = ( data[MIDDLE_ARC_POINT_ARG] != undefined ) ? data[MIDDLE_ARC_POINT_ARG] : this.centroid_point;
-	} // constructor()   
+    } // constructor()   
 
     // https://doc.babylonjs.com/features/featuresDeepDive/mesh/creation/set/sphere
     // https://doc.babylonjs.com/features/featuresDeepDive/mesh/transforms/center_origin/position}
