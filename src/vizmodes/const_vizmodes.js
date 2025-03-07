@@ -4,6 +4,7 @@
 "use strict";
 
 const CENTROID_VIZMODE      = "centroid";
+const SIMPLE_VIZMODE        = "simple";
 const ARC_VIZMODE           = "arc";
 const STAIR_STEP_VIZMODE    = "stair step";
 

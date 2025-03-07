@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Cryptoshape 0.0.31</title>
+        <title>Cryptoshape 0.0.32</title>
 		
 		<link rel="stylesheet" type="text/css" href="./css/styles.css">		
 
@@ -11,9 +11,10 @@
 		<!-- https://doc.babylonjs.com/setup/frameworkPackages/CDN -->
 		<script type="text/javascript" src="lib/babylon.js"></script>
 		<script type="text/javascript" src="lib/babylon.gui.min.js"></script>
-		<script type="text/javascript" src="lib/babylon.glTF2Serializer.min.js"></script>	
-
-        <script type="text/javascript" src="src/wordlist/wordlist_en.js"></script>
+		<script type="text/javascript" src="lib/babylon.glTF2Serializer.min.js"></script>
+        
+		<script type="text/javascript" src="src/fonts.js"></script>
+		<script type="text/javascript" src="src/wordlist/wordlist_en.js"></script>
 
 		<script type="text/javascript" src="src/const_gui.js"></script>
 		<script type="text/javascript" src="src/const_params.js"></script>
@@ -45,6 +46,7 @@
 		<script type="text/javascript" src="src/vizmodes/base_vizmode.js"></script>
 		<script type="text/javascript" src="src/vizmodes/coronavirus_vizmode.js"></script>
 		<script type="text/javascript" src="src/vizmodes/helical_virus_vizmode.js"></script>
+		<script type="text/javascript" src="src/vizmodes/simple_vizmode.js"></script>
 		<script type="text/javascript" src="src/vizmodes/pin_vizmode.js"></script>
 		<script type="text/javascript" src="src/vizmodes/blockchain_vizmode.js"></script>
 
@@ -77,6 +79,7 @@
 				<option value="arc" selected>arc</option> 
 				<option value="centroid" >centroid</option> 				
 				<option value="stair step">stair step</option>
+				<option value="simple">simple</option>
 				<option value="pin">pin</option>
 				<option value="blockchain">blockchain</option>
 				<option value="coronavirus">coronavirus</option>
@@ -92,8 +95,8 @@
 			<span>&nbsp;</span><span>Filled</span>
 			<input id="filled_triangles_id" type="checkbox" onChange="onParameterChange('filled_triangles')">
 			
-			<span>&nbsp;&nbsp;</span><span>Metadata</span>
-			<input id="metadata_id" type="checkbox" onChange="onParameterChange('metadata')" checked>
+			<!-- <span>&nbsp;&nbsp;</span><span>Metadata</span> ->
+			<!-- <input id="metadata_id" type="checkbox" onChange="onParameterChange('metadata')" checked> ->
 
 			<!-- <span>&nbsp;&nbsp;</span><span>Debug</span> -->
 			<!-- <input class="ShowHideOptionsCheckBox" -->
@@ -102,15 +105,15 @@
 		<!-- ========== 'Options' container -->
 		
 		<!-- ========== 'Show' container ========== -->
-		&nbsp;&nbsp;&nbsp;<span class="OptionsContainer">&nbsp;
-		    <span class="OptionsContainerTitle">Show &gt;&nbsp;</span>
+		<!-- &nbsp;&nbsp;&nbsp;<span class="OptionsContainer">&nbsp; -->
+		<!--    <span class="OptionsContainerTitle">Show &gt;&nbsp;</span> -->
 
-			<span>&nbsp;&nbsp;</span><span>Centroid</span>
-			<input class="ShowHideOptionsCheckBox" id="show_centroid_id" type="checkbox" onChange="onParameterChange('show_centroid')">
+		<!--	<span>&nbsp;&nbsp;</span><span>Centroid</span> -->
+		<!--	<input class="ShowHideOptionsCheckBox" id="show_centroid_id" type="checkbox" onChange="onParameterChange('show_centroid')"> -->
 
-			<span>&nbsp;&nbsp;</span><span>Box</span>
-			<input class="ShowHideOptionsCheckBox" id="show_bounding_box_id" type="checkbox" onChange="onParameterChange('show_bounding_box')" checked>			
-        </span>
+		<!--	<span>&nbsp;&nbsp;</span><span>Box</span> -->
+		<!--	<input class="ShowHideOptionsCheckBox" id="show_bounding_box_id" type="checkbox" onChange="onParameterChange('show_bounding_box')" checked>	--> 		
+        <!-- </span> -->
 		<!-- ========== 'Show' container -->
 
 		<!-- ========== 'Theme' container ========== -->

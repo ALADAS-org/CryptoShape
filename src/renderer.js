@@ -18,7 +18,8 @@ const MODE_NAME_TO_CLASS = {
 	[CORONAVIRUS_VIZMODE]: CoronaVirusVizMode, 
 	[HELICAL_VIRUS_VIZMODE]: HelicalVirusVizMode,
 	[PIN_VIZMODE]: PinVizMode,
-	[BLOCKCHAIN_VIZMODE]: BlockchainVizMode  
+	[BLOCKCHAIN_VIZMODE]: BlockchainVizMode,
+	[SIMPLE_VIZMODE]: SimpleVizMode  
 }; // MODE_NAME_TO_CLASS
 
 let PreventRecursiveEventCall = false;
@@ -79,6 +80,9 @@ class Renderer {
 		this.viz_mode = ARC_VIZMODE;
 		this.parameters[MODE_PARAM]              = this.viz_mode;
 		this.parameters[WORD_COUNT_PARAM]        = 12;
+
+		this.parameters[RENDERING_PARAM]         = DEFAULT_RENDERING;
+		this.parameters[RENDERING_FRAME_PARAM]   = 1;
 
 		//this.parameters[ARC_MODE_PARAM]          = false;
 		//this.parameters[STAIR_STEP_PARAM]        = true;

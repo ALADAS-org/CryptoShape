@@ -12,6 +12,10 @@ const XZ_MAX = "xz_max";
 const YZ_MIN = "yz_min";
 const YZ_MAX = "yz_max";
 
+const XY_PLANE = "xy_plane"; 
+const YZ_PLANE = "yz_plane"; 
+const XZ_PLANE = "xz_plane"; 
+
 const ORIGIN = BABYLON.Vector3.Zero();
 
 const DEBUG_LOCAL_AXIS_LENGTH = 0.1;
@@ -158,10 +162,25 @@ class GeometryUtils {
 		vizject.rotationQuaternion = _q.multiply( vizject._rq );
 	} // GeometryUtils.RotateAroundPivot()  
 
-	static ComputeHypothenuse( p0, p1 ) {
-		let dx = Math.abs(p1.x - p0.x);
-		let dy = Math.abs(p1.y - p0.y);
-		let hypotenuse = Math.sqrt(dx*dx + dy*dy);
+	static ComputeHypothenuse( p0, p1, plane ) {
+		if (plane == undefined) plane = XY_PLANE;
+		let d0 = 0;
+		let d1 = 0;
+		switch (plane) {
+			case XY_PLANE:  
+				d0 = Math.abs(p1.x - p0.x); 
+				d1 = Math.abs(p1.y - p0.y);
+				break;
+			case YZ_PLANE:  
+				d0 = Math.abs(p1.y - p0.y); 
+				d1 = Math.abs(p1.z - p0.z);
+				break;
+			case XZ_PLANE:  
+				d0 = Math.abs(p1.x - p0.x); 
+				d1 = Math.abs(p1.z - p0.z);
+				break;
+		}
+		let hypotenuse = Math.sqrt(d0*d0 + d1*d1);
 		return hypotenuse;
 	} // GeometryUtils.ComputeHypothenuse()
 
@@ -289,6 +308,24 @@ class GeometryUtils {
 		let plane_projection = PLANE_PROJECTIONS[plane_name];
 		return plane_projection;
 	} // GeometryUtils.PointToPlaneProjection()
+
+	static GetLineRotation( p0, p1 ) {
+		let dx = Math.max( p1.x - p0.x );
+		let dy = Math.max( p1.y - p0.y );
+		let dz = Math.max( p1.z - p0.z );
+
+		let rotation = {};
+		
+		let alpha = Math.asin( dx / GeometryUtils.ComputeHypothenuse(p0, p1, XY_PLANE) );
+		let beta  = Math.asin( dy / GeometryUtils.ComputeHypothenuse(p0, p1, YZ_PLANE) );
+		let gamme = Math.asin( dx / GeometryUtils.ComputeHypothenuse(p0, p1, XZ_PLANE) );
+
+		rotation.x = alpha;
+		rotation.y = beta;
+		rotation.z = gamme;
+
+		return rotation;
+	} // GeometryUtils.GetLineRotation()
 
 	static GetDistance( p0, p1 ) {
 		if ( percent == undefined ) percent = 50;

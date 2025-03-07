@@ -190,8 +190,8 @@ class NodeRep extends BaseRep {
             }       
 
             this.vizmode.drawStick( this ); // must be after GeometryUtils.RotateAroundPivot which sets rotationQuaternion
-
-            // this.id = "NodeRep/" + this.shape.getId();
         }
+
+        return this.shape_mesh;
     } // draw()
 } // NodeRep class

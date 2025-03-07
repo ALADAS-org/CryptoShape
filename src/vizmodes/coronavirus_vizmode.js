@@ -119,7 +119,7 @@ class CoronaVirusVizMode extends BaseVizMode {
             this.renderer.addObject( ring_torus );
 
             let node_rep_mesh = node_rep.getShapeMesh();
-            let node_rep_mesh_rotQ = node_rep_mesh.rotationQuaternion.clone();;
+            let node_rep_mesh_rotQ = node_rep_mesh.rotationQuaternion.clone();
             ring_torus.rotationQuaternion = node_rep_mesh_rotQ;
             ring_torus.addRotation( Math.PI / 2, 0, 0 );
 

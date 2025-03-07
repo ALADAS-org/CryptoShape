@@ -8,6 +8,12 @@ const THEME_PARAM              = 'screen';
 const MODE_PARAM               = 'mode';
 const WORD_COUNT_PARAM         = 'word_count';
 
+const RENDERING_PARAM          = "rendering";
+const DEFAULT_RENDERING        = "default_rendering";
+const STEP_BY_STEP_RENDERING   = "step_by_step_rendering";
+
+const RENDERING_FRAME_PARAM    = "rendering_frame";
+
 const COORDINATES_SYSTEM_PARAM = "coordinates_system";
 
 const FILE_FORMAT_PARAM        = 'file_format';
