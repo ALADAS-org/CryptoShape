@@ -80,9 +80,18 @@ class NodeRep extends BaseRep {
         let pos_z = 0;
 
         if ( this.coordinates_system == CARTESIAN_COORDINATES ) {
-            pos_x = START + STEP * this.word_point.x; // x = [0..15]
-            pos_y = START + STEP * this.word_point.y; // y = [0..15]
-            pos_z = START + STEP * this.word_point.z; // z = [0..15]
+            let vizmode_origin = this.vizmode.getOrigin();
+            let start_x = vizmode_origin.x;
+            //pos_x = START + STEP * this.word_point.x; // x = [0..15]
+            pos_x = start_x + STEP * this.word_point.x; // x = [0..15]
+
+            let start_y = vizmode_origin.y;
+            //pos_y = START + STEP * this.word_point.y; // y = [0..15]
+            pos_y = start_y + STEP * this.word_point.y; // y = [0..15]
+
+            let start_z = vizmode_origin.z;
+            // pos_z = START + STEP * this.word_point.z; // z = [0..15]
+            pos_z = start_z + STEP * this.word_point.z; // z = [0..15]
         }
         else if ( this.coordinates_system == SPHERICAL_COORDINATES ) {
             // https://stackoverflow.com/questions/10085069/polar-coordinates-of-a-vector-in-three-dimensional-space#:~:text=But%2C%20for%203D%20polar%2C%20a,z%2Daxis%20to%20the%20radius.
@@ -152,7 +161,7 @@ class NodeRep extends BaseRep {
         else if (this.node_shape == NODE_SHAPE_SPHERE) {
             data[PARENT_REP_ARG] = this;
             data[MATERIAL_ARG]   = MATERIALS[GREY_50];
-            data[SIZE_ARG]       = 0.07;                
+            data[SIZE_ARG]       = 0.07;            
             this.shape = new BallShape( this.renderer, data );
         }
         else { // NODE_SHAPE_ISOCAHEDRON

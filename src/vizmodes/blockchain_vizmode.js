@@ -50,7 +50,7 @@ class BlockchainVizMode extends BaseVizMode {
         // console.log(">> BlockchainVizMode.drawBoundings");
         if ( this.renderer.getParameter(SHOW_BOUNDING_BOX_PARAM) ) {
             let data = { [ALPHA_FACES_ARG]: true, [SIZE_ARG]: STEP * (MAX_UNITS_ON_AXIS - 1) }; 
-			ShapeUtils.DrawCubeBox( data );
+			ShapeUtils.DrawCubeBox( this, data );
 		}
     } // drawBoundings()
 

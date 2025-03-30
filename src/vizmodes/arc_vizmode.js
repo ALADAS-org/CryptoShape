@@ -1,18 +1,18 @@
 // ==========================================================================================================
-// =========================================   simple_vizmode.js   =========================================
+// ==========================================    arc_vizmode.js    ==========================================
 // ==========================================================================================================
 // https://www.google.com/search?q=virus+capside+shapes&sca_esv=3205b4b57189dd06&udm=2&biw=1229&bih=568&sxsrf=ADLYWIIb2DQgrdhwfDZhhZ8m95XfbwbULw%3A1734453270813&ei=FqhhZ8qWMa-LkdUPz8KLwQs&ved=0ahUKEwjK-df4na-KAxWvRaQEHU_hIrgQ4dUDCBE&uact=5&oq=virus+capside+shapes&gs_lp=EgNpbWciFHZpcnVzIGNhcHNpZGUgc2hhcGVzSMQxUABYzytwAHgAkAEAmAE3oAGdCaoBAjI4uAEDyAEA-AEBmAIHoALJAsICBhAAGAcYHsICCBAAGBMYBxgewgIIEAAYBxgIGB7CAgoQABgHGAgYChgemAMAkgcBN6AHrTY&sclient=img#vhid=DZw_jCnnjxyV6M&vssid=mosaic 
 "use strict";
 // NB: 'viz modes constants (eg: PIN_VIZMODE) defined in 'const_vizmodes.js' 
 
-// ============================== SimpleVizMode class ==============================
-class SimpleVizMode extends BaseVizMode {
+// ============================== ArcVizMode class ==============================
+class ArcVizMode extends BaseVizMode {
 	constructor( renderer, word_indexes, data ) {
         super( renderer, word_indexes, data );
 
         this.renderer = renderer;
 
-        this.name = SIMPLE_VIZMODE; 
+        this.name = ARC_VIZMODE; 
         this.class_name = this.constructor.name;   
             
         this.renderer.setParameter(MODE_PARAM, this.name);
@@ -27,7 +27,7 @@ class SimpleVizMode extends BaseVizMode {
 
     // NB: Create 'Nodes' before drawing them because they may be required by 'drawCore()'
     createNodes() {
-        console.log(">> SimpleVizMode.createNodes");
+        console.log(">> ArcVizMode.createNodes");
         for (let i=0; i < this.word_indexes.length; i++) {
             // NB: inconsistency with [COLOR_ARG] : for NodeRep it is the color name (eg: MAGENTA)
             //                                      for LinkRep it is the ColorAsVec3(MAGENTA)
@@ -45,7 +45,7 @@ class SimpleVizMode extends BaseVizMode {
     } // drawDebugCore()
 
     drawCore() {
-        console.log(">> SimpleVizMode.drawCore");        
+        console.log(">> ArcVizMode.drawCore");        
     } // drawCore()
 
     drawBoundings() {
@@ -59,7 +59,7 @@ class SimpleVizMode extends BaseVizMode {
     } // drawBoundings()
 
     drawNodes() {
-        console.log(">> SimpleVizMode.drawNodes");
+        console.log(">> ArcVizMode.drawNodes");
         for (let i=0; i < this.node_reps.length; i++) {
             let node_rep = this.node_reps[i];
             let shape = node_rep.draw();
@@ -78,71 +78,45 @@ class SimpleVizMode extends BaseVizMode {
     } // drawStick()
 
     drawLinks() {
-        // console.log(">> SimpleVizMode.drawLinks");
-        const create_arrow = (name, node_rep, end_point, size, material, show_ball) => {
-            if ( show_ball == undefined ) show_ball = false;
-            let arrow_mesh = BABYLON.MeshBuilder.CreateCylinder
-                (name, { "height": size, "diameterTop": 0, "diameterBottom": size}, this.renderer.getScene());
-                arrow_mesh.position = node_rep.getShapeMesh().position;
-                arrow_mesh.material = material;           
-
-            arrow_mesh.lookAt(end_point);
-            arrow_mesh.rotation.x += Math.PI / 2;
-            
-            //if (hide_ball) {
-                node_rep.getShapeMesh().setEnabled(show_ball); // hide ball mesh
-            //}
-
-            this.renderer.addObject( arrow_mesh );
-            return arrow_mesh;
-        }; // create_arrow();
-
-        let link_lines = [];
+        // console.log(">> ArcVizMode.drawLinks");
+        let p0 = BABYLON.Vector3.Zero();
+        let p1 = BABYLON.Vector3.Zero();
+        let centroid_point = GeometryUtils.ComputeCentroid( this.word_indexes, this );
+        let polyline_points = []; 
         for ( let i=0; i < this.node_reps.length; i++ ) {  
-            if ( i > 0 ) {
-                let start_node_rep = this.node_reps[i-1];
-                let end_node_rep   = this.node_reps[i];  
-                // console.log(">> link between " + start_node_rep.getId() + " and " + end_node_rep.getId());
-                
-                let link_line = ShapeUtils.DrawLine(start_node_rep.getPosition(), end_node_rep.getPosition(), CYAN);                    
-                link_lines.push(link_line);
+            let current_point = this.node_reps[i].getPosition();
+            polyline_points.push( current_point);
+            if ( i > 0 ) {                
+                p0 = polyline_points[ polyline_points.length - 1 ];
+                p1 = polyline_points[ polyline_points.length - 2 ];
+                let points = [ p0, p1 ];
 
-                let p0 = this.node_reps[i-1].getShapeMesh().position;
-                let p1 = this.node_reps[i].getShapeMesh().position;
-                let link_arrow = create_arrow
-                    ("arrow_" + i, this.node_reps[i-1], p1, 0.06, MATERIALS[CYAN], true);
-                link_arrow.position = p0.add(p1).scale(0.5);
+                let theme_name = this.renderer.getParameter(THEME_PARAM);
+                // console.log("theme_name:   " + theme_name);
+                // console.log("LINK_COLOR:   " + THEMES[theme_name][LINK_COLOR][0] );
+                let arc_color = Color.AsVec3( THEMES[theme_name][LINK_COLOR][0] );
+
+                // console.log("filled_triangles:   " + filled_triangles);
+
+                let vizject_id = "Link_" + ShapeUtils.PadWithZero(i) + "->" 
+                                         + ShapeUtils.PadWithZero(i+1); 
+
+                let data = { [ID_ARG]: vizject_id,
+                             [COLOR_ARG]: arc_color, [ORIGIN_ARG]: current_point, 
+                             [CENTROID_ARG]: centroid_point, [POINTS_ARG]: points };
+
+                let arc_shape = new ArcShape( this.renderer, data ); 
+                arc_shape.draw();
             }   
-        } // for each this.node_reps  
-
-        // ---- Start node ----
-        let p1 = this.node_reps[0].getShapeMesh().position;
-        let start_mesh = BABYLON.MeshBuilder.CreateSphere
-                ( "start_node", { "segments": 16, "diameter": 0.1 }, this.scene ); 
-
-        start_mesh.material = MATERIALS[GREEN];        
-        start_mesh.position = p1;
-        this.renderer.addObject(start_mesh);
-        // ---- Start node
-
-        // ---- End node ----
-        let node_count = this.node_reps.length;
-        p1 = this.node_reps[node_count-1].getShapeMesh().position;
-        let end_mesh = BABYLON.MeshBuilder.CreateSphere
-                ( "end_node", { "segments": 16, "diameter": 0.1 }, this.scene ); 
-        
-        end_mesh.material = MATERIALS[RED];        
-        end_mesh.position = p1;
-        this.renderer.addObject(end_mesh);
-        // ---- End node
+        } // for each this.node_reps 
     } // drawLinks()
 
     draw() {
-        console.log(">> SimpleVizMode.draw");
+        console.log(">> ArcVizMode.draw");
         this.drawBoundings();
         this.createNodes();
         this.drawCore();
         this.drawNodes();
         this.drawLinks();
     } // draw()
-} // SimpleVizMode class
+} // ArcVizMode class

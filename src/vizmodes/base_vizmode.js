@@ -12,7 +12,10 @@ class BaseVizMode {
         this.renderer     = renderer;
 
         this.name = CORONAVIRUS_VIZMODE; 
-        this.class_name = this.constructor.name;   
+        this.class_name = this.constructor.name;  
+        
+        this.origin = new BABYLON.Vector3(START, START, START);
+        // this.origin = new BABYLON.Vector3(START+STEP*7, START+STEP*7, START+STEP*7);
             
         this.renderer.setParameter(MODE_PARAM, this.name);
 
@@ -52,6 +55,10 @@ class BaseVizMode {
     getRenderer() {
         return this.renderer;
     } // getRenderer()
+
+    getOrigin() {
+        return this.origin;
+    } // getOrigin()
 
     getCoordinatesSystem() {
         return this.coordinates_system;

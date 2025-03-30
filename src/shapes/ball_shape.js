@@ -13,10 +13,10 @@ class BallShape extends BaseShape {
     // https://doc.babylonjs.com/features/featuresDeepDive/mesh/transforms/center_origin/position}
     draw() {       
         this.shape_mesh = BABYLON.MeshBuilder.CreateSphere
-                          ( this.id, { "segments": 4, "diameter": this.size}, this.scene ); 
+                ( this.id, { "segments": 4, "diameter": this.size }, this.scene ); 
 
-        this.shape_mesh.material = this.material;        
-        this.shape_mesh.position = this.origin;
+        this.shape_mesh.material  = this.material;        
+        this.shape_mesh.position  = this.origin;
 
         this.renderer.addObject(this.shape_mesh);
         

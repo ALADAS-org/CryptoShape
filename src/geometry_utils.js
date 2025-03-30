@@ -88,7 +88,12 @@ class GeometryUtils {
 		return compute_xyz( radius, theta, phi, origin  );
     } // GeometryUtils.ComputePolarPoint3D()
 
-	static ComputeCentroid( word_indexes ) {
+	static ComputeCentroid( word_indexes, vizmode ) {
+		let VIZMODE_ORIGIN = BABYLON.Vector3.Zero();
+		if (vizmode != undefined) {
+			VIZMODE_ORIGIN = vizmode.getOrigin();
+		}
+
 		let cx = 0;
 		let cy = 0;
 		let cz = 0;
@@ -104,9 +109,9 @@ class GeometryUtils {
 		let centroid_point = new BABYLON.Vector3( cx, cy, cz);
 
 		// Centroid relocated with 'START'/'STEP' and position in 3D Grid
-		let centroid_x = START + STEP * centroid_point.x;
-		let centroid_y = START + STEP * centroid_point.y;
-		let centroid_z = START + STEP * centroid_point.z;
+		let centroid_x = VIZMODE_ORIGIN.x + STEP * centroid_point.x;
+		let centroid_y = VIZMODE_ORIGIN.y + STEP * centroid_point.y;
+		let centroid_z = VIZMODE_ORIGIN.z + STEP * centroid_point.z;
 
 		let centroid_in_coordinates_system = new BABYLON.Vector3( centroid_x, centroid_y, centroid_z );
 		return centroid_in_coordinates_system; // { "x": cx, "y": cy, "z": cz };

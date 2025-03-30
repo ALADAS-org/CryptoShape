@@ -15,6 +15,7 @@ const SPHERE_DOT = "Sphere";
 const canvas = document.getElementById("renderCanvas");
 
 const MODE_NAME_TO_CLASS = { 
+	[ARC_VIZMODE]: ArcVizMode,
 	[CORONAVIRUS_VIZMODE]: CoronaVirusVizMode, 
 	[HELICAL_VIRUS_VIZMODE]: HelicalVirusVizMode,
 	[PIN_VIZMODE]: PinVizMode,

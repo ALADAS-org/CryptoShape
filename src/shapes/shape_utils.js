@@ -250,7 +250,12 @@ class ShapeUtils {
         renderer.addObject( sphere_mesh );
     } // ShapeUtils.DrawSphereBox()
 
-    static DrawCustomCubeWireframe() {
+    static DrawCustomCubeWireframe(vizmode) {
+        let VIZMODE_ORIGIN = new BABYLON.Vector3(START, START, START);
+        if (vizmode != undefined ) {
+            VIZMODE_ORIGIN = vizmode.getOrigin();
+        }
+        console.log(">> ShapeUtils.DrawCustomCubeWireframe");
         let renderer = Renderer.GetInstance();
 
         let square_mesh = undefined;
@@ -265,10 +270,11 @@ class ShapeUtils {
                     let point_vector = BOX_POINTS_MATRIX[plane_idx + point_idx];	
                     // console.log("point_vector(" + point_idx + "): " + JSON.stringify(point_vector));	
     
-                    let p1 = new BABYLON.Vector3( START + STEP * point_vector[0] * pos_index - STEP/2, 
-                                                  START + STEP * point_vector[1] * pos_index - STEP/2, 
-                                                  START + STEP * point_vector[2] * pos_index - STEP/2
-                                                );
+                    let p1 = new BABYLON.Vector3
+                    ( VIZMODE_ORIGIN.x + STEP * point_vector[0] * pos_index - STEP/2, 
+                      VIZMODE_ORIGIN.y + STEP * point_vector[1] * pos_index - STEP/2, 
+                      VIZMODE_ORIGIN.z + STEP * point_vector[2] * pos_index - STEP/2
+                    );
                     positions.push( p1 );		
                 }
             }	
@@ -305,8 +311,8 @@ class ShapeUtils {
         return square_mesh;
     } // ShapeUtils.DrawCustomCubeWireframe()
 
-    static DrawCubeBox( options ) {	
-        // console.log("ShapeUtils.DrawCubeBox: OPTIONS\n" + JSON.stringify(options));
+    static DrawCubeBox( vizmode, options ) {	
+        console.log(">> ShapeUtils.DrawCubeBox");
         if ( options == undefined ) options = {};
         if ( options[SIZE_ARG]   == undefined )  options[SIZE_ARG] = STEP * MAX_UNITS_ON_AXIS;
         let alpha_faces = ( options[ALPHA_FACES_ARG] != undefined ) ? options[ALPHA_FACES_ARG] : false;
@@ -347,7 +353,7 @@ class ShapeUtils {
         if ( alpha_faces ) exportable = true;
 
         if ( exportable ) {
-            return ShapeUtils.DrawCustomCubeWireframe();
+            return ShapeUtils.DrawCustomCubeWireframe(vizmode);
         }
         else {
             let bb_color = Color.AsVec3(THEMES[renderer.getParameter(THEME_PARAM)][BOUNDING_BOX_COLOR][0]);

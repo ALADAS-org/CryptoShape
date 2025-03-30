@@ -51,36 +51,39 @@ class PinVizMode extends BaseVizMode {
 
         if ( this.renderer.getParameter(SHOW_BOUNDING_BOX_PARAM) ) {
             let data = { [SIZE_ARG]: STEP * (MAX_UNITS_ON_AXIS - 1) }; 
-			ShapeUtils.DrawCubeBox( data );
+			ShapeUtils.DrawCubeBox( this, data );
             // ShapeUtils.DrawSphereBox( 0.2 );
 		}
     } // drawBoundings()
 
     drawNodes() {
         console.log(">> PinVizMode.drawNodes");
+
+        let VIZMODE_ORIGIN = this.getOrigin();
+
         const get_closest_point_on_axis = ( node_rep, axis_number ) => { // axis_number: X=0,Y=0,Z=0 
-            let pos_x = START + STEP * node_rep.getWordPoint().x;
-            let pos_y = START + STEP * node_rep.getWordPoint().y;
-            let pos_z = START + STEP * node_rep.getWordPoint().z;
+            let pos_x = VIZMODE_ORIGIN.x + STEP * node_rep.getWordPoint().x;
+            let pos_y = VIZMODE_ORIGIN.y + STEP * node_rep.getWordPoint().y;
+            let pos_z = VIZMODE_ORIGIN.z + STEP * node_rep.getWordPoint().z;
 
             let node_point = new BABYLON.Vector3( pos_x, pos_y, pos_z ); 
 
             switch ( axis_number ) {
-                case 0: pos_x = START; break;
-                case 1: pos_y = START; break;
-                case 2: pos_z = START; break;      
+                case 0: pos_x = VIZMODE_ORIGIN.x; break;
+                case 1: pos_y = VIZMODE_ORIGIN.y; break;
+                case 2: pos_z = VIZMODE_ORIGIN.z; break;      
             }
 
             let min_on_axis = new BABYLON.Vector3( pos_x, pos_y, pos_z ); 
             let d_min = min_on_axis.subtract(node_point).length();        
 
-            pos_x = START + STEP * node_rep.getWordPoint().x;
-            pos_y = START + STEP * node_rep.getWordPoint().y;
-            pos_z = START + STEP * node_rep.getWordPoint().z;
+            pos_x = VIZMODE_ORIGIN.x + STEP * node_rep.getWordPoint().x;
+            pos_y = VIZMODE_ORIGIN.y + STEP * node_rep.getWordPoint().y;
+            pos_z = VIZMODE_ORIGIN.z + STEP * node_rep.getWordPoint().z;
             switch ( axis_number ) {
-                case 0: pos_x = START + STEP*15; break;
-                case 1: pos_y = START + STEP*15; break;
-                case 2: pos_z = START + STEP*15; break;      
+                case 0: pos_x = VIZMODE_ORIGIN.x + STEP*15; break;
+                case 1: pos_y = VIZMODE_ORIGIN.y + STEP*15; break;
+                case 2: pos_z = VIZMODE_ORIGIN.z + STEP*15; break;      
             }
             let max_on_axis = new BABYLON.Vector3( pos_x, pos_y, pos_z ); 
             let d_max = max_on_axis.subtract(node_point).length();
@@ -101,9 +104,9 @@ class PinVizMode extends BaseVizMode {
             let node_rep = this.node_reps[i];
             node_rep.draw();
 
-            let pos_x = START + STEP * node_rep.getWordPoint().x;
-            let pos_y = START + STEP * node_rep.getWordPoint().y;
-            let pos_z = START + STEP * node_rep.getWordPoint().z;
+            let pos_x = VIZMODE_ORIGIN.x + STEP * node_rep.getWordPoint().x;
+            let pos_y = VIZMODE_ORIGIN.y + STEP * node_rep.getWordPoint().y;
+            let pos_z = VIZMODE_ORIGIN.z + STEP * node_rep.getWordPoint().z;
             let node_point = new BABYLON.Vector3( pos_x, pos_y, pos_z );
 
             let closest_on_X_axis = get_closest_point_on_axis(node_rep, 0);
