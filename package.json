@@ -1,6 +1,6 @@
 {
   "name": "@aladas-org/cryptoshape",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "description": "Generates a representation of a Bip39 seed phrase as a 3D scene",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
