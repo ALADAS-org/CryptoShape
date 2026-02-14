@@ -1,4 +1,4 @@
-## CryptoShape 0.0.35 
+## CryptoShape 0.0.36 
 Copyright (c) 2025 - Michel Kern and Daniel Rodet     
 License: BSD-3-Clause   
 https://github.com/ALADAS-org/CryptoShape
@@ -29,6 +29,7 @@ https://github.com/ALADAS-org/CryptoShape
 		- Stair Step
 		- Pin
 		- Blockchain
+		- Qbit
 		- Coronavirus
 		- Helical virus
 		
